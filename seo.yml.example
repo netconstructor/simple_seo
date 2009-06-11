@@ -1,0 +1,27 @@
+static:
+  controller: pages
+  action: show
+  view: name  # El parametro que indica el nombre del contenido estático.
+
+default:
+  keywords: "default keyword"
+ 
+  en:
+    title: I need my seo, dear web developer
+  es:
+    title: Necesito mi seo, querido desarrollador web
+    
+
+welcome_index:
+  keywords: "website, web"
+
+  en:
+    title: Home
+    keywords: "site, car"
+    description: "This is a description"
+  es:
+    title: Inicio
+    keywords: "sitio, coche"
+    description: "Esto es una descripción"
+  de:
+    ...

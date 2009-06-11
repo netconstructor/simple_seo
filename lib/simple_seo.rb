@@ -4,6 +4,7 @@ module SimpleSEO
       base.before_filter :load_simple_seo
     end
     
+    protected
     def load_simple_seo
       path = File.join(Rails.root, "config", "seo.yml")
       seo = open(path, 'r'){|f| YAML::load(f) } if File.exist?(path)
@@ -19,12 +20,13 @@ module SimpleSEO
   end
   
   module Helper
-    def seotags(options = {})
-      title = [@content_for_title, options[:title_connector], options[:default_title]]
-      str = "<title>#{options[:title_reverse] ? title.reverse.join(" ") : title.join(" ")}</title>\n"
+    def metatags(options = {})
+      title = [@content_for_title, options[:default_title]]
+      title.reverse! if options[:title_reverse]
+            
+      str = "<title>" + title.join(" #{options[:title_connector]} ") + "</title>\n"
       str += meta("keywords", @content_for_keywords)
       str += meta("description", @content_for_description)
-      str
     end
     
     def meta(name, content)
