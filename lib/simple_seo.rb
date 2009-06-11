@@ -7,16 +7,32 @@ module SimpleSEO
     protected
     def load_simple_seo
       path = File.join(Rails.root, "config", "seo.yml")
-      seo = open(path, 'r'){|f| YAML::load(f) } if File.exist?(path)
+      @file = open(path, 'r'){|f| YAML::load(f) } if File.exist?(path)
 
-      if defined?(seo)
+      unless @file.nil?
         [:title, :keywords, :description].each do |name|
           ivar = "@content_for_#{name.to_s}"
-          content = seo["#{controller_name}_#{action_name}"][I18n.locale.to_s][name.to_s]
+          content = content_seo_for(name)
           instance_variable_set(ivar, "#{instance_variable_get(ivar)}#{content}")      
         end
       end
     end
+    
+    def content_seo_for(name)
+      keys = values.nil? ? @file["default"] : values
+
+      res = ""
+      res += "#{keys[name.to_s]}"
+      res += "#{keys[I18n.locale.to_s][name.to_s]}"
+    end
+    
+    def values
+      if controller_name == @file["static"]["controller"] && action_name == @file["static"]["action"]
+        @file["#{controller_name}_#{params[@file["static"]["view"].to_sym]}"]
+      else
+        @file["#{controller_name}_#{action_name}"]
+      end
+    end    
   end
   
   module Helper
