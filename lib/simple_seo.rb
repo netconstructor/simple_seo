@@ -21,9 +21,13 @@ module SimpleSEO
     def content_seo_for(name)
       keys = values.nil? ? @file["default"] : values
 
-      res = ""
-      res += "#{keys[name.to_s]}"
-      res += "#{keys[I18n.locale.to_s][name.to_s]}"
+      begin
+        res = ""
+        res += "#{keys[name.to_s]}"
+        res += "#{keys[I18n.locale.to_s][name.to_s]}"
+      rescue
+        # Don't exist any information about seo for this action/controller
+      end
     end
     
     def values
@@ -44,9 +48,13 @@ module SimpleSEO
       str += meta("keywords", @content_for_keywords)
       str += meta("description", @content_for_description)
     end
-    
+        
     def meta(name, content)
       %(<meta name="#{name}" content="#{content}" />\n)
+    end
+    
+    def add_meta_for(name, content)
+      eval("@content_for_#{name.to_s} += content")
     end
   end
 end
