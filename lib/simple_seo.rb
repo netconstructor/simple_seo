@@ -19,18 +19,18 @@ module SimpleSEO
     end
     
     def content_seo_for(name)
-      keys = values.nil? ? @file["default"] : values
+      values = values_from_yml.nil? ? @file["default"] : values_from_yml
 
       begin
         res = ""
-        res += "#{keys[name.to_s]}"
-        res += "#{keys[I18n.locale.to_s][name.to_s]}"
+        res += "#{values[name.to_s]}"
+        res += "#{values[session[:locale].to_s][name.to_s]}"
       rescue
         # Don't exist any information about seo for this action/controller
       end
     end
     
-    def values
+    def values_from_yml
       if controller_name == @file["static"]["controller"] && action_name == @file["static"]["action"]
         @file["#{controller_name}_#{params[@file["static"]["view"].to_sym]}"]
       else
