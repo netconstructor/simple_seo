@@ -84,10 +84,12 @@ Y por cada controlador/action estandar añadiremos la siguiente configuración a
 
 ### Otras opciones
 
-Si tuviesemos que definer keywords de forma dinámica tenemos la posibilidad de definirlo con el método _add\_meta\_for_ tanto en el controlador como en la vista de la siguiente forma:
+Si tuviesemos que definer keywords de forma dinámica tenemos la posibilidad de definirlo con el método _add\_meta\_for_ en el controlador  de la siguiente forma:
 
-    add_meta_for(:keywords, :en => "car", :es => "coche")
-    add_meta_for(:description, :en => "...", :es => "...")
+    def index
+      add_meta_for(:keywords, :en => "yellow submarine", :es => "submarino amarillo")
+      add_meta_for(:description, :en => "...", :es => "...")
+    end
 
 ## License and copyright
 

@@ -2,6 +2,7 @@ module SimpleSEO
   module Controller
     def self.included(base)
       base.before_filter :load_simple_seo
+      base.helper_method :add_meta_for
     end
     
     protected
@@ -49,7 +50,12 @@ module SimpleSEO
       else
         @file["#{controller_name}_#{action_name}"]
       end
-    end    
+    end 
+    
+    def add_meta_for(name, content)
+      eval("@content_for_#{name.to_s} = 
+        [@content_for_#{name.to_s}, content[session[:locale].to_sym]].join(', ')")
+    end
   end
   
   module Helper
@@ -65,12 +71,8 @@ module SimpleSEO
     def meta(name, content)
       %(<meta name="#{name}" content="#{content}" />\n)
     end
-    
-    def add_meta_for(name, content)
-      eval("@content_for_#{name.to_s} = [@content_for_#{name.to_s}, content[session[:locale].to_sym]].join(', ')")
-    end
   end
 end
 
-ActionController::Base.send(:include, SimpleSEO::Controller)
 ActionView::Base.send(:include, SimpleSEO::Helper)
+ActionController::Base.send(:include, SimpleSEO::Controller)
