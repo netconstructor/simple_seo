@@ -19,15 +19,28 @@ module SimpleSEO
     end
     
     def content_seo_for(name)
-      values = values_from_yml.nil? ? @file["default"] : values_from_yml
+      values = default?(values_from_yml, name) ? @file["default"] : values_from_yml
 
       begin
         res = ""
         res += "#{values[name.to_s]}"
-        res += "#{values[session[:locale].to_s][name.to_s]}"
-      rescue
-        # Don't exist any information about seo for this action/controller
+        res += "#{values[session[:locale].to_s][name.to_s]}" 
+      rescue NoMethodError
+        # Don't exists any information about seo for this action/controller 
+        res # or don't exists localize information 
       end
+    end
+    
+    def default?(values, name)
+      unless values.nil?
+        if values[name.to_s].present? || 
+          (values[session[:locale].to_s].present? && 
+           values[session[:locale].to_s][name.to_s].present?)
+            return false
+        end
+      end
+      
+      true          
     end
     
     def values_from_yml
@@ -41,7 +54,7 @@ module SimpleSEO
   
   module Helper
     def metatags(options = {})
-      title = [@content_for_title, options[:default_title]]
+      title = [@content_for_title, options[:title]]
       title.reverse! if options[:title_reverse]
             
       str = "<title>" + title.join(" #{options[:title_connector]} ") + "</title>\n"
@@ -54,7 +67,7 @@ module SimpleSEO
     end
     
     def add_meta_for(name, content)
-      eval("@content_for_#{name.to_s} += content")
+      eval("@content_for_#{name.to_s} = [@content_for_#{name.to_s}, content[session[:locale].to_sym]].join(', ')")
     end
   end
 end

@@ -13,7 +13,7 @@ default:
     
 
 welcome_index:
-  keywords: "website, web, wadus"
+  keywords: "website, web, rails, ruby"
 
   en:
     title: Home
