@@ -2,7 +2,7 @@
 
 ## Descripción
 
-El objetivo de este plugin es centralizar la administración del SEO básico (title, keywords y description) en los distintos idiomas de nuestro site en un único fichero yml.
+El objetivo de este plugin es centralizar la administración del SEO básico (title, keywords y description) en los distintos idiomas de una aplicación en un único fichero yml.
 
 ## Getting it
 
@@ -12,9 +12,13 @@ El objetivo de este plugin es centralizar la administración del SEO básico (ti
 
 ### Metatag & title
 
-Para poner en funcionamiento el plugin necesitaremos definir en el layout el metodo _metatags_. Este método recibe opcionalmente un _title_ global que formará parte siempre del title de todo el site. Además definir el _title\_connector_ para enlazar ambos titles, el global y el definido en el yml o alterar el orden de los mismos con _title\_reverse_ a **true**.
+Para poner en funcionamiento el plugin necesitaremos definir en el layout el metodo _metatags_. Este método recibe opcionalmente _title_, _title\_connector_ y _title\_reverse_.
 
-En _nuestro_ application.html.haml (o en _tu_ html.erb :)
+* _title_ define un title global para toda la aplicación independiente al definido el fichero yml.
+* _title\_connector_ define el conector entre el title global y el definido en el fichero.
+* _title\_reverse_, con este parametro booleano podremos decidir en que orden van los titles antes explicados.
+
+En _nuestro_ application.html.haml (o en _tu_ html.erb :), unos ejemplos:
     
     !!!
   
@@ -34,7 +38,7 @@ El fichero donde configuraremos el SEO de nuestro site debe estar en _config/seo
 
 ### Default   
 
-Si no definimos el SEO para un controlador/acción concreto, la información bajo _default_ será la seleccionada. Esta estrategia nos permite definir el SEO para todas aquellas páginas a las que no deseemos asignarle un SEO específico.
+Si no definimos el SEO para un controlador/acción concreto, la información bajo _default_ será la seleccionada por defecto. Esta estrategia nos permite definir el SEO para todas aquellas páginas a las que no deseemos asignarle un SEO específico.
 
     default:
       keywords: "default keywords"
@@ -49,7 +53,7 @@ Si no definimos el SEO para un controlador/acción concreto, la información baj
 
 ### Static controller
 
-Bajo _static_ podemos definir el controlador, la acción y el parámetro (view: name) que la aplicación utiliza para servir contenido estático, en el caso que la aplicación usara este tipo de lógica. Un ejemplo: 
+Bajo _static_ podemos la lógica que utiliza la aplicación para servir contenido estático, en el caso que la aplicación usara este tipo de lógica. Un ejemplo: 
 
     static:
       controller: pages
@@ -66,7 +70,7 @@ Bajo _static_ podemos definir el controlador, la acción y el parámetro (view: 
 
 ### Standard controller/action
 
-Y por cada controlador/action estandar añadiremos la siguiente configuración al fichero:
+Y por cada controlador/action añadiremos la siguiente configuración al fichero:
 
     welcome_index:
       keywords: "website, web, rails, ruby"
@@ -84,20 +88,18 @@ Y por cada controlador/action estandar añadiremos la siguiente configuración a
 
 ### Otras opciones
 
-Si tuviesemos que definer keywords de forma dinámica tenemos la posibilidad de definirlo con el método _add\_meta\_for_ en el controlador  de la siguiente forma:
+Si tuviesemos que definer keywords de forma dinámica tenemos la posibilidad de definirlo con el método _add\_meta\_for_ en el controlador de la siguiente forma:
 
-    def index
+    def show
       add_meta_for(:keywords, :en => "yellow submarine", :es => "submarino amarillo")
       add_meta_for(:description, :en => "...", :es => "...")
     end
 
 ## License and copyright
 
-This app is MIT licensed, wich basically means you can do whatever you want with it, and there's no warranty of any kind. Read the MIT-LICENSE file to get the details.
-
-However, if you like it I would like you to send me an e-mail letting me know, also I'd like to receive your feedback and suggestions.
+This app is MIT licensed, wich basically means you can do whatever you want with it, and there's no warranty of any kind. Read the MIT-LICENSE file to get the details. However, if you like it I would like you to send me an e-mail letting me know, also I'd like to receive your feedback and suggestions.
 
 Thanks!
 
-(c) 2009, Juan Gallego (juan.gallego.iv AT gmail DOT com) http://juan.gg
+(c) 2009, Juan Gallego (juan.gallego.iv AT gmail DOT com) [http://juan.gg](http://juan.gg)
 
