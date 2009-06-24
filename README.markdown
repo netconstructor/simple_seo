@@ -1,6 +1,6 @@
 # SimpleSEO
 
-## Descripcion
+## Descripción
 
 El objetivo de este plugin es centralizar la administración del SEO básico (title, keywords y description) en los distintos idiomas de nuestro site en un único fichero yml.
 
@@ -12,9 +12,9 @@ El objetivo de este plugin es centralizar la administración del SEO básico (ti
 
 ### Metatag & title
 
-Para poner en funcionamiento el plugin necesitaremos definir en el layout el metodo _metatags_. Este método recibe opcionalmente un _title_ que se incluirá junto al definido por el fichero yml. Además definir el _title\_connector_ para enlazar ambos titles, el master y el definido en el yml o alterar el orden de los mismos con _title\_reverse_ a *true*.
+Para poner en funcionamiento el plugin necesitaremos definir en el layout el metodo _metatags_. Este método recibe opcionalmente un _title_ global que formará parte siempre del title de todo el site. Además definir el _title\_connector_ para enlazar ambos titles, el global y el definido en el yml o alterar el orden de los mismos con _title\_reverse_ a **true**.
 
-In our application.html.haml (or your html.erb :)
+En _nuestro_ application.html.haml (o en _tu_ html.erb :)
     
     !!!
   
