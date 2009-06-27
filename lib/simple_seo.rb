@@ -2,7 +2,6 @@ module SimpleSEO
   module Controller
     def self.included(base)
       base.before_filter :load_simple_seo
-      base.helper_method :add_meta_for
     end
     
     protected
@@ -21,11 +20,11 @@ module SimpleSEO
     
     def content_seo_for(name)
       values = default?(values_from_yml, name) ? @file["default"] : values_from_yml
-
+      
       begin
         res = ""
         res += "#{values[name.to_s]}"
-        res += "#{values[session[:locale].to_s][name.to_s]}" 
+        res += "#{values[locale.to_s][name.to_s]}" 
       rescue NoMethodError
         # Don't exists any information about seo for this action/controller 
         res # or don't exists localize information 
@@ -35,8 +34,8 @@ module SimpleSEO
     def default?(values, name)
       unless values.nil?
         if values[name.to_s].present? || 
-          (values[session[:locale].to_s].present? && 
-           values[session[:locale].to_s][name.to_s].present?)
+          (values[locale.to_s].present? && 
+           values[locale.to_s][name.to_s].present?)
             return false
         end
       end
@@ -54,13 +53,17 @@ module SimpleSEO
     
     def add_meta_for(name, content)
       eval("@content_for_#{name.to_s} = 
-        [@content_for_#{name.to_s}, content[session[:locale].to_sym]].join(', ')")
+        [@content_for_#{name.to_s}, content[locale.to_sym]].join(', ')")
+    end
+    
+    def locale
+      params[:locale] || session[:locale] || I18n.locale
     end
   end
   
   module Helper
     def metatags(options = {})
-      title = [@content_for_title, options[:title]]
+      title = [@content_for_title, options[:title]].reject{ |x| x.blank? }
       title.reverse! if options[:title_reverse]
             
       str = "<title>" + title.join(" #{options[:title_connector]} ") + "</title>\n"
