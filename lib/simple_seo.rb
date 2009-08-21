@@ -1,5 +1,7 @@
 module SimpleSEO
   module Controller
+    include UtilSEO
+    
     def self.included(base)
       base.before_filter :load_simple_seo
     end
@@ -44,36 +46,41 @@ module SimpleSEO
     end
     
     def values_from_yml
+      controller_name = controller_path.gsub("/", "_")
       if @file["static"] && controller_name == @file["static"]["controller"] && action_name == @file["static"]["action"]
         @file["#{controller_name}_#{params[@file["static"]["view"].to_sym]}"]
       else
         @file["#{controller_name}_#{action_name}"]
       end
     end 
-    
-    def add_meta_for(name, content)
-      eval("@content_for_#{name.to_s} = 
-        [@content_for_#{name.to_s}, content[locale.to_sym]].join(', ')")
-    end
-    
-    def locale
-      params[:locale] || session[:locale] || I18n.locale
-    end
   end
   
   module Helper
+    include UtilSEO
+    
     def metatags(options = {})
-      title = [@content_for_title, options[:title]].reject{ |x| x.blank? }
+      title = [evaluate(@content_for_title), options[:title]].reject{ |x| x.blank? }
       title.reverse! if options[:title_reverse]
             
       str = "<title>" + title.join(" #{options[:title_connector]} ") + "</title>\n"
-      str += meta("keywords", @content_for_keywords)
-      str += meta("description", @content_for_description)
+      str += meta("keywords", evaluate(@content_for_keywords))
+      str += meta("description", evaluate(@content_for_description))
+    end
+
+    def evaluate(content)
+      rexp = /\{\{[\(|\)|\.|\@|\w]+\}\}/
+      if content =~ rexp
+        content.scan(rexp).each do |res|
+          content.gsub!(res, eval(res.gsub(/\{|\}/, "")))
+        end 
+      end
+
+      content
     end
         
     def meta(name, content)
       %(<meta name="#{name}" content="#{content}" />\n)
-    end
+    end    
   end
 end
 
