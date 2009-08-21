@@ -44,7 +44,7 @@ module SimpleSEO
     end
     
     def values_from_yml
-      if controller_name == @file["static"]["controller"] && action_name == @file["static"]["action"]
+      if @file["static"] && controller_name == @file["static"]["controller"] && action_name == @file["static"]["action"]
         @file["#{controller_name}_#{params[@file["static"]["view"].to_sym]}"]
       else
         @file["#{controller_name}_#{action_name}"]
